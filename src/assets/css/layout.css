@@ -1,0 +1,152 @@
+/* Table of contents
+
+- variables
+- scaffolding
+- components
+  - input
+  - select
+  - button
+  - modal
+  - loader
+  - trip-info
+  - trip-price
+- layout
+  - header
+  - profile-nav
+  - footer
+- pages
+  - sign-up/sign-in pages
+  - main-page
+    - trips-filter
+    - trips
+  - trip-page
+    - book-trip-popup
+  - bookings-page
+- animations
+
+*/
+
+
+
+/* layout */
+
+/* header */
+
+.header {
+  position: relative;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--color-gray);
+}
+
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+.header__logo {
+  margin: 0;
+  color: var(--color-blue-400);
+  font-weight: 600;
+  font-size: var(--font-size-500);
+  font-family: Verdana, sans-serif;
+  text-decoration: none;
+}
+
+.header__nav {
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+
+.nav-header__list {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-header__item {
+  border-left: 1px solid var(--color-gray);
+}
+
+.nav-header__inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 80px;
+  height: 100%;
+}
+
+/* profile-nav */
+
+.profile-nav {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-nav:hover .profile-nav__list,
+.profile-nav:focus .profile-nav__list,
+.profile-nav__list:focus-within .profile-nav__list {
+  display: block;
+}
+
+.profile-nav__list {
+  position: absolute;
+  top: 90%;
+  right: 15px;
+  z-index: 5;
+  display: none;
+  min-width: 150px;
+  padding: 0;
+  list-style: none;
+  background-color: var(--color-white);
+  border-radius: 1px;
+  box-shadow: var(--shadow);
+}
+
+.profile-nav__item {
+  padding: 0 10px 10px;
+  text-align: center;
+}
+
+.profile-nav__item:first-child {
+  padding-top: 10px;
+}
+
+.profile-nav__sign-out {
+  min-height: auto;
+}
+
+/* footer */
+
+.footer {
+  padding: 30px 20px;
+  color: var(--color-white);
+  text-align: center;
+  background-color: var(--color-blue-400);
+}
+
+.footer__text {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.footer__icon {
+  width: 16px;
+}
+
+.footer__link {
+  color: var(--color-blue-200);
+  text-decoration: none;
+  transition: 0.1s color ease;
+}
+
+.footer__link:hover {
+  color: var(--color-blue-300);
+}
+

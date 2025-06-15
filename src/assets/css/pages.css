@@ -1,0 +1,275 @@
+/* Table of contents
+
+- variables
+- scaffolding
+- components
+  - input
+  - select
+  - button
+  - modal
+  - loader
+  - trip-info
+  - trip-price
+- layout
+  - header
+  - profile-nav
+  - footer
+- pages
+  - sign-up/sign-in pages
+  - main-page
+    - trips-filter
+    - trips
+  - trip-page
+    - book-trip-popup
+  - bookings-page
+- animations
+
+*/
+
+
+/* pages */
+
+/* sign in/sign up pages */
+
+.sign-up-page,
+.sign-in-page {
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.sign-up-form,
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 30px;
+}
+
+.sign-up-form__title,
+.sign-in-form__title {
+  margin: 0 0 20px;
+  font-size: var(--font-size-400);
+  text-align: center;
+}
+
+.sign-up-form__link,
+.sign-in-form__link {
+  color: var(--color-blue-200);
+  transition: 0.1s color ease;
+}
+
+.sign-up-form__link:hover,
+.sign-in-form__link:hover {
+  color: var(--color-blue-300);
+}
+
+/* main-page */
+
+/* trips-filter */
+
+.trips-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+  padding: 20px;
+  background-color: var(--color-blue-400);
+}
+
+.trips-filter__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 25px;
+  width: 100%;
+  max-width: var(--container-width);
+}
+
+.trips-filter__search {
+  width: 100%;
+  max-width: 350px;
+}
+
+.trips-filter__search input {
+  padding-left: 50px;
+  background-color: var(--color-white);
+  background-image: url("../images/search.svg");
+  background-repeat: no-repeat;
+  background-position: 15px 50%;
+  background-size: 22px;
+}
+
+/* trips */
+
+.trips {
+  padding: 60px 20px;
+}
+
+.trip-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, auto));
+  justify-content: center;
+  gap: 30px;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.trip-card {
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+  background-color: var(--color-white);
+  border-radius: 1px;
+  box-shadow: var(--shadow);
+}
+
+.trip-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 30px;
+  flex: 1;
+}
+
+/* trip-page */
+
+.trip-page {
+  padding: 60px 20px;
+}
+
+.trip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 50px;
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+.trip__img {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+}
+
+.trip__content {
+  display: flex;
+  flex: 1 1 400px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  padding-top: 20px;
+}
+
+.trip__description {
+  opacity: 0.7;
+}
+
+.trip__button {
+  max-width: 200px;
+}
+
+/* book-trip-popup */
+
+.book-trip-popup {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+  padding: 25px 40px 30px;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.book-trip-popup__close {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  padding: 0;
+  font-weight: 300;
+  font-size: var(--font-size-400);
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.book-trip-popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.book-trip-popup__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+  padding-top: 15px;
+  border-top: 1px solid var(--color-gray);
+}
+
+.book-trip-popup__total-value {
+  font-weight: 600;
+  font-size: var(--font-size-400);
+}
+
+/* bookings-page */
+
+.bookings-page {
+  padding: 60px 20px;
+}
+
+.bookings__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.booking {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 40px;
+  width: 100%;
+  padding: 15px 25px;
+  background-color: var(--color-blue-100);
+  border-left: 4px solid var(--color-blue-200);
+  border-radius: 1px;
+}
+
+.booking__title {
+  width: 100%;
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--font-size-400);
+  font-family: Verdana, sans-serif;
+  line-height: 1;
+}
+
+.booking__cancel {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  padding: 0;
+  font-weight: 300;
+  font-size: var(--font-size-400);
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  opacity: 0.5;
+}

@@ -1,0 +1,182 @@
+/* Table of contents
+
+- variables
+- scaffolding
+- components
+  - input
+  - select
+  - button
+  - modal
+  - loader
+  - trip-info
+  - trip-price
+- layout
+  - header
+  - profile-nav
+  - footer
+- pages
+  - sign-up/sign-in pages
+  - main-page
+    - trips-filter
+    - trips
+  - trip-page
+    - book-trip-popup
+  - bookings-page
+- animations
+
+*/
+
+
+/* components */
+
+/* input */
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input__heading {
+  font-size: var(--font-size-100);
+  line-height: 1;
+}
+
+.input input {
+  min-width: 160px;
+  min-height: 45px;
+  padding: 10px 15px;
+  font-size: var(--font-size-300);
+  background-color: var(--color-blue-100);
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.input input::placeholder {
+  color: var(--color-blue-400);
+  opacity: 0.4;
+}
+
+/* select */
+
+.select select {
+  min-width: 160px;
+  min-height: 45px;
+  padding: 10px 40px 10px 15px;
+  font-size: var(--font-size-300);
+  background-color: var(--color-white);
+  background-color: var(--color-white);
+  background-image: url("../images/arrow-down.svg");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 15px;
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* button */
+
+.button {
+  display: block;
+  width: 100%;
+  min-height: 45px;
+  padding: 10px 15px;
+  color: var(--color-white);
+  font-size: var(--font-size-200);
+  text-align: center;
+  text-decoration: none;
+  background-color: var(--color-blue-200);
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--color-blue-300);
+}
+
+.button-reset {
+   min-width: 160px;
+  min-height: 45px;
+  padding: 10px 15px;
+  font-size: var(--font-size-300);
+  background-color: var(--color-blue-100);
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* modal */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  background-color: var(--overlay-color);
+}
+
+/* loader */
+
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--color-blue-200);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: rotate 1.2s infinite linear;
+}
+
+/* trip-info */
+
+.trip-info {
+  width: 100%;
+  max-width: 300px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-gray);
+}
+
+.trip-info__title {
+  margin: 0 0 5px;
+  font-weight: 600;
+  font-size: var(--font-size-400);
+  font-family: Verdana, sans-serif;
+}
+
+.trip-info__content {
+  display: flex;
+  font-weight: 300;
+}
+
+.trip-info__duration {
+  min-width: 120px;
+  padding-left: 25px;
+  background-image: url("../images/calendar.svg");
+  background-repeat: no-repeat;
+  background-position: 0 50%;
+  background-size: 15px;
+}
+
+.trip-info__level::before {
+  content: "•";
+  margin-right: 10px;
+  color: var(--color-blue-200);
+}
+
+/* trip-price */
+
+.trip-price__value {
+  display: block;
+  color: var(--color-blue-200);
+  font-size: var(--font-size-600);
+  line-height: 1;
+}

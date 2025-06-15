@@ -25,9 +25,15 @@
 - animations
 
 */
-@import './variables.css';
-@import './scaffolding.css';
-@import './components.css';
-@import './layout.css'; 
-@import './pages.css';
-@import './animations.css';
+
+/* animations */
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
