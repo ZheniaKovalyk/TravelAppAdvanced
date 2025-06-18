@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import trips from "../assets/data/trips.json";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useGetTripByIdQuery } from "../redux/api/tripAPI";
 
 const Trip = () => {
   const { id } = useParams();
-  const trip = trips.find((t) => t.id === id);
+  const { data: trip, isLoading, error } = useGetTripByIdQuery(id!);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [errors, setErrors] = useState({ date: "", guests: "" });
 
-  if (!trip) return <h2>Trip not found</h2>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !trip) return <h2>Trip not found</h2>;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

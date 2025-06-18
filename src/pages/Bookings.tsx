@@ -1,29 +1,36 @@
 import { useState } from "react";
-import booking from "../assets/data/bookings.json";
 import { useLocation } from "react-router-dom";
+import { useGetBookedTripsQuery, useCancelTripMutation } from "../redux/api/tripAPI";
+
 const Bookings = () => {
   const location = useLocation();
   const newBooking = location.state?.newBooking;
 
-  const initialBookings = booking;
+  const { data, isLoading, error } = useGetBookedTripsQuery();
+  const [cancelTrip] = useCancelTripMutation();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading bookings</div>;
+
+  const bookings = data?.bookedTrips || [];
+
+  const handleCancel = (id: string) => {
+    cancelTrip(id);
+  };
 
   const allBookings = newBooking
     ? [
-        ...initialBookings.map((b) => ({ ...b, total: b.totalPrice })), // json-броні
+        ...bookings.map((b) => ({ ...b, total: b.totalPrice })), // json-броні
         { ...newBooking, total: newBooking.guests * newBooking.price }, // нове бронювання
       ]
-    : initialBookings.map((b) => ({ ...b, total: b.totalPrice }));
+    : bookings.map((b) => ({ ...b, total: b.totalPrice }));
 
   const sortedBookings = allBookings.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
   // Зберігаємо у стані
-  const [bookings, setBookings] = useState(sortedBookings);
-
-  const handleCancel = (id: string) => {
-    setBookings((prev) => prev.filter((b) => b.id !== id));
-  };
+  const [filteredBookings, setBookings] = useState(sortedBookings);
 
   return (
     <>
@@ -33,7 +40,7 @@ const Bookings = () => {
           {allBookings.length === 0 ? (
             <p>No bookings found.</p>
           ) : (
-            bookings.map((booking) => (
+            filteredBookings.map((booking) => (
               <li key={booking.id} data-test-id="booking" className="booking">
                 <h3 data-test-id="booking-title" className="booking__title">
                   {booking.trip?.title || booking.title}

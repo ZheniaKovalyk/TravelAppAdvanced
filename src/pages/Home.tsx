@@ -1,16 +1,20 @@
-import {Link } from 'react-router-dom';
-import trips from '../assets/data/trips.json';
+import { Link } from 'react-router-dom';
+import { useGetTripsQuery } from '../redux/api/tripAPI'; // імпорт хука
 import { useState } from 'react';
 
-
-
 const Home = () => {
-const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [duration, setDuration] = useState('');
   const [level, setLevel] = useState('');
+  const { data, isLoading, error } = useGetTripsQuery(); // отримання даних з API
 
- const filteredTrips = trips.filter((trip) =>{
-    const matchesTitle = trip.title.toLowerCase().includes(searchTerm.toLowerCase()) 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading trips</div>;
+
+  const trips = data?.trips || [];
+
+  const filteredTrips = trips.filter((trip) => {
+    const matchesTitle = trip.title.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesDuration =
       duration === '' ||

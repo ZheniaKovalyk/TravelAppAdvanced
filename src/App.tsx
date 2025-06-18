@@ -5,6 +5,7 @@ import SignIn from './pages/Sign-in';
 import SignUp from './pages/Sign-up';
 import Bookings from './pages/Bookings';
 import Trip from './pages/Trip';
+import ProtectedRoute from './layout/ProtectedRoute';
 
 const App = () => {
   return (
