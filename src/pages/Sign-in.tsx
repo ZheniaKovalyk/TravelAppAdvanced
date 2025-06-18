@@ -1,106 +1,79 @@
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import type { SubmitHandler } from "react-hook-form";
+import type { LoginRequest } from "../redux/api/authAPI";
+import { useLoginMutation } from "../redux/api/authAPI";
+import { useDispatch } from "react-redux";
+import { setCreddentials } from "../redux/auth/slice";
 
 const SignIn = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const [login, { isLoading }] = useLoginMutation();
+
+  const dispatch = useDispatch();
+
+  const validationSchema = yup
+    .object({
+      email: yup.string().email("Enter valid email").required("Please, enter email"),
+      password: yup
+        .string()
+        .min(3, "Passowrd must be at least 3 characters")
+        .max(20, "Passowrd must be at least 20 characters")
+        .required(),
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginRequest>({
+    resolver: yupResolver(validationSchema),
   });
 
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "" });
-  };
-
-  const validate = () => {
-    const newErrors = {
-      email: "",
-      password: "",
-    };
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 3 || formData.password.length > 20) {
-      newErrors.password = "Password must be 3–20 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).every((err) => !err);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted:", formData);
+  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
+    try {
+      const user = await login(data).unwrap();
+      dispatch(setCreddentials(user));
       navigate("/");
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Credentials are incorrect");
     }
   };
+
+  const navigate = useNavigate();
 
   return (
-    <>
-      <main className="sign-in-page">
-        <h1 className="visually-hidden">Travel App</h1>
-        <form
-          className="sign-in-form"
-          autoComplete="off"
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <h2 className="sign-in-form__title">Sign In</h2>
-          <label className="input">
-            <span className="input__heading">Email</span>
-            <input
-              data-test-id="auth-email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {errors.email && <p className="error">{errors.email}</p>}
-          </label>
-          <label className="input">
-            <span className="input__heading">Password</span>
-            <input
-              data-test-id="auth-password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            {errors.password && <p className="error">{errors.password}</p>}
-          </label>
-          <button data-test-id="auth-submit" className="button" type="submit">
-            Sign In
-          </button>
-        </form>
-        <span>
-          Don't have an account?
-          <Link
-            data-test-id="auth-sign-up-link"
-            className="sign-in-form__link"
-            to="/sign-up"
-          >
-            Sign Up
-          </Link>
-        </span>
-      </main>
-    </>
+    <main className="sign-in-page">
+      <ToastContainer />
+      <h1 className="visually-hidden">Travel App</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="sign-in-form" autoComplete="off">
+        <h2 className="sign-in-form__title">Sign In</h2>
+        <label className="trip-popup__input input">
+          <span className="input__heading">Email</span>
+          <input {...register("email")} type="email" />
+          <p>{errors.email?.message}</p>
+        </label>
+        <label className="trip-popup__input input">
+          <span className="input__heading">Password</span>
+          <input {...register("password")} autoComplete="new-password"/>
+          <p>{errors.password?.message}</p>
+        </label>
+        <button className="button" type="submit" disabled={isLoading}>
+          Sign In
+        </button>
+      </form>
+      <span>
+       Don't have an account?
+        <Link to="/sign-up" className="sign-in-form__link">
+          Sign Up
+        </Link>
+      </span>
+    </main>
   );
 };
 

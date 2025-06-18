@@ -1,9 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
+import { selectCurrentToken, selectCurrentUser } from "../redux/auth/selectors";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const location = useLocation();
   const hideNav =
     location.pathname === "/sign-in" || location.pathname === "/sign-up";
+
+  const user = useSelector(selectCurrentUser);
+  const userName = user?.fullName;
 
   return (
     <header className="header">
@@ -40,7 +45,7 @@ const Header = () => {
                       data-test-id="header-profile-nav-username"
                       className="profile-nav__item"
                     >
-                      John Doe
+                      {userName}
                     </li>
                     <li className="profile-nav__item">
                       <Link

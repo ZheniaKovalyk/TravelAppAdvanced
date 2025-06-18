@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetTripByIdQuery } from "../redux/api/tripAPI";
+import { useGetTripByIdQuery, useBookTripMutation } from "../redux/api/tripAPI";
 
 const Trip = () => {
   const { id } = useParams();
@@ -10,6 +10,7 @@ const Trip = () => {
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [errors, setErrors] = useState({ date: "", guests: "" });
+  const [bookTrip, { isLoading: isBooking }] = useBookTripMutation();
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !trip) return <h2>Trip not found</h2>;
@@ -21,6 +22,7 @@ const Trip = () => {
     const newErrors = { date: "", guests: "" };
     const selectedDate = new Date(date);
     const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (!date) {
@@ -37,20 +39,27 @@ const Trip = () => {
     return Object.values(newErrors).every((e) => !e);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const booking = {
-      id: Date.now(),
-      tripId: trip?.id,
-      title: trip?.title,
-      date,
-      guests,
-      price: trip?.price! * guests,
-      image: trip?.image,
-    };
-    navigate("/bookings", { state: { newBooking: booking } });
+    try {
+      // Assuming userId is stored in localStorage after login
+      const userId = localStorage.getItem("userId");
+      await bookTrip({
+        tripId: trip.id,
+        userId: userId || "",
+        guests,
+        date,
+      }).unwrap();
+      closeModal();
+      navigate("/bookings");
+    } catch (err) {
+      setErrors((prev) => ({
+        ...prev,
+        date: "Booking failed. Try again.",
+      }));
+    }
   };
 
   return (
@@ -200,3 +209,4 @@ const Trip = () => {
 };
 
 export default Trip;
+

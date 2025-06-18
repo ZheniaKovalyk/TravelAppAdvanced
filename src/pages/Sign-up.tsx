@@ -1,126 +1,85 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import type { RegisterRequest } from "../redux/api/authAPI";
+import { useSignUpMutation } from "../redux/api/authAPI";
+import { setCreddentials } from "../redux/auth/slice";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
+  const [signUp, { isLoading }] = useSignUpMutation();
+
+  const dispatch = useDispatch();
+
+  const validationSchema = yup
+    .object({
+      fullName: yup.string().required("Please, enter a full name"),
+      email: yup.string().email("Enter valid email").required("Please, enter email"),
+      password: yup
+        .string()
+        .min(3, "Passowrd must be at least 3 characters")
+        .max(20, "Passowrd must be at least 20 characters")
+        .required(),
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterRequest>({
+    resolver: yupResolver(validationSchema),
   });
 
-  const [errors, setErrors] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const key = name === "full-name" ? "fullName" : name;
-    setFormData({ ...formData, [key]: value });
-    setErrors({ ...errors, [key]: "" });
-  };
-
-  const validate = () => {
-    const newErrors = {
-      fullName: "",
-      email: "",
-      password: "",
-    };
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full Name is required";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 3 || formData.password.length > 20) {
-      newErrors.password = "Password must be 3–20 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).every((err) => !err);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted:", formData);
+  const onSubmit: SubmitHandler<RegisterRequest> = async (data) => {
+    try {
+      const user = await signUp(data).unwrap();
+      dispatch(setCreddentials(user));
       navigate("/");
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Email already registered");
     }
   };
+
+  const navigate = useNavigate();
 
   return (
-    <>
-      <main className="sign-up-page">
-        <h1 className="visually-hidden">Travel App</h1>
-        <form
-          className="sign-up-form"
-          autoComplete="off"
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <h2 className="sign-up-form__title">Sign Up</h2>
-          <label className="input">
-            <span className="input__heading">Full name</span>
-            <input
-              data-test-id="auth-full-name"
-              name="full-name"
-              type="text"
-              onChange={handleChange}
-              value={formData.fullName}
-              required
-            />
-            {errors.fullName && <p className="error">{errors.fullName}</p>}
-          </label>
-          <label className="input">
-            <span className="input__heading">Email</span>
-            <input
-              data-test-id="auth-email"
-              name="email"
-              type="email"
-              onChange={handleChange}
-              value={formData.email}
-              required
-            />
-            {errors.email && <p className="error">{errors.email}</p>}
-          </label>
-          <label className="input">
-            <span className="input__heading">Password</span>
-            <input
-              data-test-id="auth-password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              onChange={handleChange}
-              value={formData.password}
-              required
-            />
-            {errors.password && <p className="error">{errors.password}</p>}
-          </label>
-          <button data-test-id="auth-submit" className="button" type="submit">
-            Sign Up
-          </button>
-        </form>
-        <span>
-          Already have an account?
-          <Link
-            data-test-id="auth-sign-in-link"
-            className="sign-up-form__link"
-            to="/sign-in"
-          >
-            Sign In
-          </Link>
-        </span>
-      </main>
-    </>
+    <main className="sign-up-page">
+      <ToastContainer />
+      <h1 className="visually-hidden">Travel App</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="sign-up-form" autoComplete="off">
+        <h2 className="sign-up-form__title">Sign Up</h2>
+        <label className="trip-popup__input input">
+          <span className="input__heading">Full name</span>
+          <input {...register("fullName")} />
+          <p>{errors.fullName?.message}</p>
+        </label>
+        <label className="trip-popup__input input">
+          <span className="input__heading">Email</span>
+          <input {...register("email")} type="email" />
+          <p>{errors.email?.message}</p>
+        </label>
+        <label className="trip-popup__input input">
+          <span className="input__heading">Password</span>
+          <input {...register("password")} autoComplete="new-password" />
+          <p>{errors.password?.message}</p>
+        </label>
+        <button className="button" type="submit" disabled={isLoading}>
+          Sign Up
+        </button>
+      </form>
+      <span>
+        Already have an account?
+        <Link to="/sign-in" className="sign-up-form__link">
+          Sign In
+        </Link>
+      </span>
+    </main>
   );
 };
 
