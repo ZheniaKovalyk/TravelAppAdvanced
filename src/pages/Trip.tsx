@@ -1,22 +1,23 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { useGetTripByIdQuery, useBookTripMutation } from "../redux/api/tripAPI";
+import { toast } from "react-toastify";
 
 const Trip = () => {
   const { id } = useParams();
   const { data: trip, isLoading, error } = useGetTripByIdQuery(id!);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [errors, setErrors] = useState({ date: "", guests: "" });
-  const [bookTrip, { isLoading: isBooking }] = useBookTripMutation();
+  const [bookTrip] = useBookTripMutation();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div data-test-id="loader">Loading...</div>;
   if (error || !trip) return <h2>Trip not found</h2>;
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => setIsModalOpen(false); 
+
 
   const validateForm = () => {
     const newErrors = { date: "", guests: "" };
@@ -44,21 +45,15 @@ const Trip = () => {
     if (!validateForm()) return;
 
     try {
-      // Assuming userId is stored in localStorage after login
-      const userId = localStorage.getItem("userId");
       await bookTrip({
         tripId: trip.id,
-        userId: userId || "",
         guests,
         date,
       }).unwrap();
       closeModal();
-      navigate("/bookings");
+      toast.success("Booking successful!");
     } catch (err) {
-      setErrors((prev) => ({
-        ...prev,
-        date: "Booking failed. Try again.",
-      }));
+      toast.error("Booking failed. Try again.");
     }
   };
 

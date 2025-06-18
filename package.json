@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://zheniakovalyk.github.io/TravelApp/",
+  "homepage": "https://zheniakovalyk.github.io/TravelAppAdvanced/",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",

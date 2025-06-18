@@ -1,14 +1,22 @@
-import { Link, useLocation } from "react-router-dom";
-import { selectCurrentToken, selectCurrentUser } from "../redux/auth/selectors";
-import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { selectCurrentUser } from "../redux/auth/selectors";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../redux/auth/slice";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const hideNav =
     location.pathname === "/sign-in" || location.pathname === "/sign-up";
 
   const user = useSelector(selectCurrentUser);
   const userName = user?.fullName;
+
+  const handleSignOut = () => {
+    dispatch(logOut());
+    navigate("/sign-in");
+  };
 
   return (
     <header className="header">
@@ -48,13 +56,14 @@ const Header = () => {
                       {userName}
                     </li>
                     <li className="profile-nav__item">
-                      <Link
+                      <button
                         data-test-id="header-profile-nav-sign-out"
                         className="profile-nav__sign-out button"
-                        to="/sign-in"
+                        onClick={handleSignOut}
+                        type="button"
                       >
                         Sign Out
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 </div>

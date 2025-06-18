@@ -1,17 +1,23 @@
 import { useGetBookedTripsQuery, useCancelTripMutation } from "../redux/api/tripAPI";
+import { toast } from "react-toastify";
 
 const Bookings = () => {
   const { data, isLoading, error } = useGetBookedTripsQuery();
   const [cancelTrip] = useCancelTripMutation();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div data-test-id="loader">Loading...</div>;
   if (error) return <div>Error loading bookings</div>;
 
-  const bookings = data?.bookedTrips || [];
-
-  const handleCancel = (id: string) => {
-    cancelTrip(id);
-  };
+  const bookings = Array.isArray(data) ? data : data?.bookedTrips || [];
+console.log(data);
+const handleCancel = async (id: string) => {
+  try {
+    await cancelTrip(id).unwrap();
+    toast.success("Booking cancelled successfully!", { className: "notification" });
+  } catch {
+    toast.error("Failed to cancel booking.", { className: "notification" });
+  }
+};
 
   return (
     <main className="bookings-page">

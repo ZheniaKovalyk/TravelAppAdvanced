@@ -18,7 +18,6 @@ export interface TripsResponse {
 
 export interface BookRequest {
   tripId: string;
-  userId: string;
   guests: number;
   date: string;
 }

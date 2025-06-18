@@ -18,7 +18,7 @@ const Home = () => {
   const { data, isLoading, error } = useGetTripsQuery();
   console.log(data, error);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div data-test-id="loader">Loading...</div>;
   if (error) return <div>Error loading trips</div>;
 
   const trips: Trip[] = Array.isArray(data) ? data : [];
